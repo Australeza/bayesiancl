@@ -1,0 +1,16 @@
+pandas==2.2.2
+numpy==1.26.4
+seaborn==0.11.0
+matplotlib>=3.7.3
+scipy==1.13.1
+sympy==1.13.2
+ptitprince==0.2.7
+pymc==5.18.2
+arviz==0.20.0
+preliz==0.4.1
+setuptools==75.1.0
+more-itertools==10.3.0
+texttable==1.7.0
+
+scikit-learn~=1.5.1
+

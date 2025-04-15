@@ -1,0 +1,2 @@
+from bayesian_clustering.algorithms.cardinality_case import CardBased
+from bayesian_clustering.algorithms.product_form_case import ProductForm

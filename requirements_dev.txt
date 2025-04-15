@@ -1,0 +1,13 @@
+pip
+bumpversion
+flake8
+coverage
+jupyter
+jupytext
+pre-commit
+black
+isort
+pytest
+pytest-runner
+pytest-cov
+
