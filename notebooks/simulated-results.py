@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.16.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
-#     display_name: Python [conda env:thesis] *
+#     display_name: Python 3 (ipykernel)
 #     language: python
-#     name: conda-env-thesis-py
+#     name: python3
 # ---
 
 # ## Simulations
@@ -97,7 +97,8 @@ def product_form(row):
     bs.fit(np.array(data), prior_means = means)
 
     #predict labels for data
-    labels = bs.predict(np.array(data))[0]
+    labels = bs.predict(np.array(data))[0][0]
+    #print(labels)
 
     #check prior assumptions
     bs.assumptions_partition_prior_check()
@@ -118,13 +119,38 @@ def do_dbscan(row):
 deltas = [0.2, 0.5, 1.2, 3, 5.5, 9, 15]
 number_of_clusters = [3, 7, 11, 15, 19, 25, 31, 35]
 
+# +
+import time
+import sys
+
+def print_progress_bar(iteration, total, length=30):
+    percent = 100 * (iteration / float(total))
+    filled_length = int(length * iteration // total)
+    bar = '█' * filled_length + '-' * (length - filled_length)
+    print(f'\rProgress: |{bar}| {percent:.1f}% Complete', end='')
+    if iteration == total:
+        print()  # Newline on completion
+
+
+
+# +
 labels = []
 dfs = {}
+i = 0
+total_iterations  = 8
 for k in number_of_clusters:
+    i += 1 
+    #progress bar
+    print_progress_bar(i+, total_iterations)
+
+    #data
     min_points = math.floor(k*1.7)
-    file_name = f"dataset_K{k}_N{min_points}_2000_1d.txt"
+    file_name = f"dataset_K{k}_N{min_points}_2000_2d.txt"
     file_path = f"../docs/datasets/simulated_datasets/{file_name}"
-    df = pd.read_csv(file_path, sep="; ")
+    df_unf = pd.read_csv(file_path, sep="; ")
+
+    #only n<=1116
+    df = df_unf[df_unf['sample_size'] <= 1406]
 
     #arrays
     df["generated_sample"] =df["generated_sample"].apply(lambda x: ast.literal_eval(x))
@@ -146,23 +172,126 @@ for k in number_of_clusters:
 
     #save to dictionary with key the filename and value the produced dataframe
     #print(df.columns, df.dtypes)
-    dfs[file_name] = df
+    df.to_csv(f"../docs/datasets/simulated_datasets/Results_{filename}", sep=";", index=False)
+    
+    
+# -
 
+
+d = dfs['dataset_K3_N5_2000_1d.txt']
+d['sample_size'].unique()
 
 # It takes more than an hour to run
 
-newd = pd.read_csv("Results_dataset_K3_N5_2000_1d.txt'", sep = ";")
+for key, df_value in dfs.items():
+    df_value.to_csv(f"../docs/datasets/simulated_datasets/Results_{key}.txt", sep=";", index=False)
+
+file_name = "../docs/datasets/simulated_datasets/
+
+newd = pd.read_csv("../docs/datasets/simulated_datasets/Results_dataset_K3_N5_2000_1d.txt.txt", sep = ";")
 newd
 
 newd.dtypes
 
+deltas = [0.2, 0.5, 1.2, 3, 5.5, 9, 15]
+number_of_clusters = [3, 7, 11, 15, 19, 25, 31, 35]
+
+# +
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+#figure size
+plt.figure(figsize=(12, 5)) 
+
+# Melt the DataFrame
+df_long = newd.reset_index().melt(
+    id_vars='delta',
+    value_vars=['kmeans_metric_vi', 'prodform_metric_vi', 'db_metric_vi'],
+    var_name='Method',
+    value_name='Performance'
+)
+
+# Plot with Seaborn
+sns.lineplot(data=df_long, x='delta', y='Performance', hue='Method')
+
+plt.title("Performance Comparison of K=3 clusters")
+plt.xlabel("Delta")
+plt.ylabel("Performance metric VI")
+plt.xticks(deltas)
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# -
+
+
+
+plt.figure(figsize=(12, 5)) 
+
+# +
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+#figure size
+plt.figure(figsize=(12, 5)) 
+
+df_long = df.melt(
+    id_vars=['sample_size', 'delta'],
+    value_vars=['kmeans_metric_vi', 'prodform_metric_vi', 'db_metric_vi'],
+    var_name='Method',
+    value_name='Performance'
+)
+
+
+df_long['Method'] = df_long['Method'].replace({
+    'kmeans_metric_vi': 'K-Means',
+    'prodform_metric_vi': 'Product Form',
+    'db_metric_vi': 'DBScan'
+})
+
+# Plot with Seaborn
+sns.lineplot(data=df_long, x='sample_size', y='Performance', hue='Method')
+
+plt.title("Performance Comparison of K=3 clusters")
+plt.xlabel("Delta")
+plt.ylabel("Performance metric VI")
+#plt.xticks(deltas)
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+
+# +
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(12, 5))
+
+# Melt the DataFrame
+df_long = newd.reset_index().melt(
+    id_vars='delta',
+    value_vars=['kmeans_metric_vi', 'prodform_metric_vi', 'db_metric_vi'],
+    var_name='Method',
+    value_name='Performance'
+)
+
+sns.lineplot(data=df_long, x='delta', y='Performance', hue='Method', marker='o')
+
+plt.title("Performance vs Delta at Different Sample Sizes")
+plt.xlabel("Delta")
+plt.ylabel("Performance")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# -
 
 
 
 
-
-
-
-
+pivot = df.pivot(index='sample_size', columns='delta', values='kmeans_metric_vi')
+sns.heatmap(pivot, annot=True, cmap='viridis')
 
 

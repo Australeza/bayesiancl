@@ -82,6 +82,7 @@ class CardBased(BaseClustering):
         self.prior_means = prior_means
         self.n_points = len(list(self.data))
         self.n_clusters = len(self.prior_means)
+        print(type(data))
         if len(data.T) == 2:
             print("2d")
             self.marginals_i = margs_mat(list(self.data), list(self.prior_means),

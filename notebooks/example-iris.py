@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.16.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
-#     display_name: Python [conda env:thesis] *
+#     display_name: Python 3 (ipykernel)
 #     language: python
-#     name: conda-env-thesis-py
+#     name: python3
 # ---
 
 # ## Dataset Iris
@@ -76,19 +76,6 @@ flower[:4].tolist()
 
 sns.scatterplot(x = df["petal_area"], y= df["sepal_area"], hue=df["target"])
 plt.title("True data/ clusters")
-
-
-def flower_2d(labeling,  ax, method = "True"):
-    global flower
-    
-    data_2 = np.array(flower)
-    x_2, y_2  = data_2[:,0], data_2[:,1]
-    
-    sns.scatterplot(ax =ax, x=x_2, y=y_2, s=25, color=".15", hue=labeling)
-    ax.set_title(method)
-    
-    return 
-
 
 # # Comparison
 
@@ -175,16 +162,33 @@ labels_7 = bs.predict(np.array(flower))[0]
 
 #check prior assumptions
 bs.assumptions_partition_prior_check()
+
+
 # -
 
 
-# ### Plots
+print(labels)
 
 
 # - Comparison between KMeans, ProdForm and DBScan for **n_clusters = 3, 4 and 7**
 
-fig, axes = plt.subplots(1,3,figsize=(10, 5) )
-flower_2d(labels, axes[0], "Product- Form")
+# ### Plots
+
+def flower_2d(labeling,  ax, method = "True"):
+    global flower
+    
+    data_2 = np.array(flower)
+    x_2, y_2  = data_2[:,0], data_2[:,1]
+    print(len(x_2),len(y_2))
+    
+    sns.scatterplot(ax=ax, x=x_2, y=y_2, s=25, color=".15", hue=labeling)
+    ax.set_title(method)
+    
+    return 
+
+
+fig, axes = plt.subplots(1,3, figsize=(10, 5))
+flower_2d(labels[0], axes[0], "Product- Form")
 flower_2d(kmeans_labels ,axes[1],"KMeans")
 flower_2d(df["target"], axes[2])
 fig.suptitle("K=3")
@@ -198,7 +202,7 @@ fig.suptitle("K=4")
 plt.savefig("graphs/iris_K4.png")
 
 fig, axes = plt.subplots(1,3,figsize=(10, 5) )
-flower_2d(labels_7, axes[0], "Product- Form")
+flower_2d(labels_7[0], axes[0], "Product- Form")
 flower_2d(kmeans_labels_7,  axes[1], "Kmeans")
 flower_2d(df["target"], axes[2])
 fig.suptitle("K=7")
@@ -214,7 +218,7 @@ plt.savefig("graphs/iris_K7.png")
 #dict_means ={"vertical_cut": [[1,30],[1,13],[1,8], [1,10]], "horizontal_cut": [[1,10],[5,10],[10,10]], "kmeans": centers_kmeans_sepal, "random": random.sample(sepal.tolist(),3)}
 # -
 
-mus = [random.sample(sepal.tolist(),3), [[1,10],[5,10],[10,10]], [[1,30],[1,13],[1,8]], np.zeros((2,3)).T]
+mus = [random.sample(flower.tolist(),3), [[1,10],[5,10],[10,10]], [[1,30],[1,13],[1,8]], np.zeros((2,3)).T]
 names = ["random", "initial horizontal", "initial vertical", "zeros"]
 
 fig, axes= plt.subplots(1,4, figsize=(13,5))

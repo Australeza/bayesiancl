@@ -1,15 +1,14 @@
 import numpy as np
 import operator
-import scipy.stats as sps
+
 
 from bayesian_clustering.algorithms.base_bayes import BaseClustering
-from bayesian_clustering.priors import normal_conv, sample_uniprod, check_sums, anal_norm_conv_2d
+from bayesian_clustering.priors import sample_uniprod, check_sums, anal_norm_conv_2d
 from bayesian_clustering.data_simulation import partition_space_nulls
 from bayesian_clustering.prediction_post import partition_to1d_labels
 from bayesian_clustering.prediction_post import prod_post_probs, prod_max_post_prob, repeat_sampling, prod_random_partition,partition_undo1d
 from bayesian_clustering.product_form import compute_invconstant, omega, get_pxi, \
     normalizing_const, all_pmarginals
-from bayesian_clustering.card_based import margs_mat
 
 np.random.seed(160)
 
@@ -109,6 +108,7 @@ class ProductForm(BaseClustering):
             convolution_prior = anal_norm_conv_2d
             self.marginals_i = get_pxi(self.data, self.prior_means, convolution_prior)
         else:
+            print('1d')
             self.marginals_i = get_pxi(self.data, self.prior_means)
         #print(self.marginals_i)
         self.p_sums, self.p_const = normalizing_const(self.marginals_i, self.omegas)
@@ -135,7 +135,7 @@ class ProductForm(BaseClustering):
         optimal_partition = list(self.all_partitions)[optimal_idx]
         #print(optimal_partition)
         self.labels = partition_to1d_labels(self.n_points,list(optimal_partition))
-        print(self.labels)
+        #print(self.labels)
 
     def _predict_with_posterior(self):
         print("Predicting with posterior probabilities...")
