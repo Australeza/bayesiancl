@@ -9,7 +9,9 @@ It is assumed that the clusters are normally distributed with "true" and unknown
 - The *target* of this method is to best partition the data into clusters.
 - The number of cluster  is *NOT* assumed to be fixed but an upper bound k is given as input to the algorithm.
 
-### This project includes:
+## Usage
+- To see the project in action, check out the .py version of this simple [example](notebooks/example-iris.py)
+#### This project includes:
 1. Theory derived from Bayesian Inference.
 2. The *ProdForm* and *CardBased* algorithms.
 3. Performance evaluation distances
@@ -50,14 +52,6 @@ pip install -e .
 pip install -r requirements_dev.txt
 ```
 
-
-## Usage
-To see the project in action, check out the .py version of the [example notebook](notebooks/example-iris.py)
-
-**It covers:**
-- Application of ProdForm to 2-d data.
-- Comparison between ProdForm method with KMeans and DBScan.
-- Method behaviour based on different initializations.
 
 ## Authors and acknowledgment
 
