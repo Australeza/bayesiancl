@@ -69,6 +69,8 @@ def get_pxi(sample_x:list, prior_mus:np.array, func = normal_conv) -> ndarray[
         (k)x(n) probabilities for (point i, cluster l) assuming normal prior.
     """
     pxs_d = np.array([[func(x_i, mu) for x_i in sample_x] for idx_mu, mu in enumerate(prior_mus)])
+    if pxs_d.shape[-1] == 1:
+        pxs_d = pxs_d.squeeze(-1)
     return pxs_d
 
 

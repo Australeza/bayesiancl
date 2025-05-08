@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.16.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
-#     display_name: Python [conda env:thesis] *
+#     display_name: Python 3 (ipykernel)
 #     language: python
-#     name: conda-env-thesis-py
+#     name: python3
 # ---
 
 # ## k groups cardinality-based prior
@@ -66,14 +66,14 @@ from bayesian_clustering.card_based import unique, fill_coeffs
 #setting seed for reproducibility 
 np.random.seed(160)
 
-K = 3 #number of clusters
+K = 2 #number of clusters
 N = 7 #number of observations
 
 #true means
-true_means = [2, 10, 12]
+true_means = [2, 10]
 
 #prior means
-prior_mus = [1, 9, 11]
+prior_mus = [1, 9]
 
 #generate all possible k-groups w/ permutations
 partition_space = partition_space_nulls(N, K)
@@ -113,15 +113,15 @@ list(unique_coeffs.items()), type(unique_coeffs)
 print(list(unique_coeffs)[0])
 
 # generate prior values of size len(cardinalities)
-prior_vs = g_multicard(N, unique_coeffs, [0.4, 0.3, 0.3])
+prior_vs = g_multicard(N, unique_coeffs, [0.7, 0.3])
 #list(prior_vs.items())[:10]
 np.sum(list(prior_vs.values()))
 
 partition_space[:10]
 
-marginals_per_partition = all_cmarginals(priors, partition_space)
+lambdas_M = get_klambdas(prior_vs)
 
-lambdas_I, lambdas_M = get_klambdas(prior_vs, partition_space)
+marginals_per_partition, lambdas_pp = all_cmarginals(priors, partition_space, lambdas_M)
 
 list(lambdas_M.items())[:4], list(lambdas_I)[-4:]
 

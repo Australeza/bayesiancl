@@ -13,7 +13,7 @@ from bayesian_clustering.product_form import compute_invconstant, omega, get_pxi
 np.random.seed(160)
 
 class ProductForm(BaseClustering):
-    def __init__(self, use_all_possible_partitions: bool = True, use_random_sampling_posterior = False, sampling_size: int = 500 ):
+    def __init__(self, use_partition_space: bool = False, sampling_size: int = None ):
         super().__init__()
         self.partition_prior_distribution = None
         self.prior_distribution = None
@@ -30,11 +30,10 @@ class ProductForm(BaseClustering):
         self.all_partitions = None
         self.posterior_probs = None
         self.p_sums = None
-        self.use_all_possible_partitions = use_all_possible_partitions
-        self.use_random_sampling_posterior = use_random_sampling_posterior
-        if self.use_all_possible_partitions:
-            self.use_random_sampling_posterior = False
+        self.use_partition_space = use_partition_space
         self.sampling_size = sampling_size
+        if self.use_partition_space:
+            self.use_sampling_size = None
 
     def choose_lambda_ind(self, distribution=None, **kwargs)->np.array:
         """Assigns distribution to lambdas.
@@ -96,7 +95,7 @@ class ProductForm(BaseClustering):
 
     def fit(self, data, prior_means, partition_prior_distribution = None):
         self.partition_prior_distribution = partition_prior_distribution
-        self.data = list(data)
+        self.data = data
         self.prior_means = prior_means
         self.n_points = len(self.data)
         self.n_clusters = len(self.prior_means)
@@ -104,20 +103,17 @@ class ProductForm(BaseClustering):
         self.c_lambda = compute_invconstant(self.l_values)
         self.omegas = omega(self.l_values)
         if len(data.T) ==2:
-            print('2d')
             convolution_prior = anal_norm_conv_2d
             self.marginals_i = get_pxi(self.data, self.prior_means, convolution_prior)
         else:
-            print('1d')
             self.marginals_i = get_pxi(self.data, self.prior_means)
-        #print(self.marginals_i)
         self.p_sums, self.p_const = normalizing_const(self.marginals_i, self.omegas)
         return self
 
     def predict(self, data: np.ndarray):
-        if self.use_all_possible_partitions:
+        if self.use_partition_space:
             self.all_partitions = partition_space_nulls(self.n_points, self.n_clusters)
-            self._predict_with_all_partitions()
+            self._predict_with_partition_space()
         else:
             self._predict_with_posterior()
         if self.optimal_partition is None and self.labels is not None:
@@ -126,8 +122,8 @@ class ProductForm(BaseClustering):
         return self.labels, self.optimal_partition
 
 
-    def _predict_with_all_partitions(self):
-        print("Predicting with all possible partitions...")
+    def _predict_with_partition_space(self):
+        #print("Predicting with all possible partitions...")
         self.lambdas_per_partition, self.marginals_per_partition, prod_per_partition = all_pmarginals(self.c_lambda,self.marginals_i, self.l_values, self.all_partitions)
         #print(self.c_lambda, self.p_const)
         normalized_pxs = np.array(prod_per_partition) * 1. / self.p_const
@@ -138,11 +134,11 @@ class ProductForm(BaseClustering):
         #print(self.labels)
 
     def _predict_with_posterior(self):
-        print("Predicting with posterior probabilities...")
+        #print("Predicting with posterior probabilities...")
         probs = prod_post_probs(self.omegas, self.marginals_i, self.p_sums)
         self.posterior_probs = probs
-        if self.use_random_sampling_posterior:
-            print("Random sampling... with number of samples: {}".format(self.sampling_size))
+        if self.sampling_size is not None:
+            #print("Random sampling... with number of samples: {}".format(self.sampling_size))
             all_sampling_occur = repeat_sampling(self.sampling_size, np.matrix(probs),
                                                  prod_random_partition)
             max_occ_k = max(all_sampling_occur.items(), key=operator.itemgetter(1))[0]
@@ -157,6 +153,6 @@ class ProductForm(BaseClustering):
 
     def assumptions_partition_prior_check(self):
         checks = True
-        if self.use_all_possible_partitions:
+        if self.use_partition_space:
             checks = check_sums(self.lambdas_per_partition)
         print("The assumption on the partition prior are {}".format(checks))

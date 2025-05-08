@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.16.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
-#     display_name: Python [conda env:thesis] *
+#     display_name: Python 3 (ipykernel)
 #     language: python
-#     name: conda-env-thesis-py
+#     name: python3
 # ---
 
 # ## Product-form - bivariate data
@@ -48,7 +48,7 @@ from numpy._typing import _64Bit
 
 # Bayesian_clustering package imports
 from bayesian_clustering.data_simulation import simulate_2d_data, plot_points, partition_space_nulls
-from bayesian_clustering.priors import normal_conv, sample_uniprod, check_sums, normal_conv_2d,  g_multicard, anal_norm_conv_2d
+from bayesian_clustering.priors import normal_conv, sample_uniprod, check_sums, g_multicard, anal_norm_conv_2d
 from bayesian_clustering.product_form import compute_invconstant, omega,  get_pxi, normalizing_const, all_pmarginals
 from bayesian_clustering.prediction_post import prod_post_probs, partition_undo1d, prod_max_post_prob,partition_to1d_labels, repeat_sampling, prod_random_partition,card_post_probs,card_k_comp_post,card_max_cluster,card_random_partition
 from bayesian_clustering.card_based import margs_mat, get_klambdas, mult_polynomial, get_multic, fill_card, binom_op
@@ -234,15 +234,14 @@ sample_2d
 
 prior_means_2d = [[1,0], [3,4], [3,7]]
 
-priors_2d = margs_mat(sample_2d, prior_means_2d, anal_norm_conv_2d)
+priors_2d = margs_mat(sample_2d, prior_means_2d)
 priors_2d.shape, priors_2d
 
 # - the multivariate polynomial
 
 polyn_2d = mult_polynomial(priors_2d)
 
-coeffs_2d = get_multic(polyn_2d)
-coeffs_2d = dict(map(lambda kv: (fill_card(N2, kv[0]), kv[1]),coeffs_2d.items()))
+coeffs_2d = get_multic(polyn_2d, N2)
 list(coeffs_2d.items())[:3]
 
 prior_vs2 = g_multicard(N2, coeffs_2d.keys(), [0.2, 0.1, 0.7])
@@ -264,10 +263,14 @@ list(g_per_m2.items())[:3]
 
 lambdas_m2 = { m: g_per_m2[m]*1./binom_op(m) for m in g_per_m2.keys()}
 
+get_constant_px(list(self.mult_polynomial_coeffs.values()), list(self.lambda_per_cardinality.values()))
+
+
 # - constant $P_X$
 
 px2 = np.inner(np.array(list(coeffs_2d.values())),np.array(list(lambdas_m2.values())))
 px2
+
 
 # - Using posterior
 
@@ -277,7 +280,7 @@ p_k2[:4]
 
 # - maximum posterior probability
 
-max_occ_2d = card_max_cluster(p_k2.tolist()); max_occ_2d
+max_occ_2d = card_max_cluster(p_k2); max_occ_2d
 
 # - random sampling
 
@@ -290,6 +293,8 @@ max_rep_2d = max(all_occur_k2.items(), key=operator.itemgetter(1))[0]
 # -
 
 max_rep_2d
+
+partition_2d
 
 # Back to lists representation
 est_partition = partition_undo1d(max_rep_2d, K2)

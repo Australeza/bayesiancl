@@ -4,21 +4,20 @@ from itertools import combinations
 
 import numpy as np
 import scipy
-import scipy.stats as sps
 from numpy import dtype, ndarray
 import sympy as sp
 
-from bayesian_clustering.priors import normal_conv
+from bayesian_clustering.priors import normal_conv,anal_norm_conv_2d
 
 
 
 # Base for all cases K = 2, K > 2
-def margs_mat(sample_x: list[float], prior_mus: list, func = normal_conv)-> ndarray[Any, dtype[Any]]:
+def marginals_i_mat(sample_x: np.array, prior_mus: list)-> ndarray[Any, dtype[Any]]:
     r"""Probability matrix of dimensions n x k.
 
     Parameters
     ----------
-    sample_x: list[float]
+    sample_x: np.array
         observed data
     prior_mus: list[float]
         prior/assumed means of the distribution
@@ -30,9 +29,15 @@ def margs_mat(sample_x: list[float], prior_mus: list, func = normal_conv)-> ndar
     matrix : ndarray[Any, Any]
         Probabilities for each point i \in [n] belonging to cluster l \in [k].
     """
+    if sample_x.ndim == 1:
+        func = normal_conv
+    elif sample_x.ndim == 2:
+        func = anal_norm_conv_2d
     n_cl = len(prior_mus)
     n_x = len(sample_x)
     pxs_m = np.array([[func(sample_x[idx], prior_mus[idx_mu]) for idx in range(n_x)] for idx_mu in range(n_cl)])
+    if len(pxs_m.shape) == 3:
+        pxs_m = pxs_m.squeeze()
     return pxs_m
 
 
@@ -87,7 +92,7 @@ def get_coeffs(polyp: np.poly1d)->list:
 
 
 
-def all_cmarginals(priors_mat:np.ndarray, subsets: list) -> list[list]:
+def all_cmarginals(priors_mat:np.ndarray, subsets: list, lambdas_m:dict) -> [list,list]:
     f"""Calculating the marginals for each possible partition.
 
     Parameters
@@ -96,17 +101,21 @@ def all_cmarginals(priors_mat:np.ndarray, subsets: list) -> list[list]:
         probability matrix of dimensions n x k
     subsets: list
         partitions from the partition space
+    lambdas_m: dict
+     lambdas per cardinality
 
     Returns
     -------
-    list
-        Marginals for each possible partition by calling cluster_marginal.
+    list,list
+        Marginals for each possible partition by calling cluster_marginala and lambdas
+        for all partitions
 
     """
-    px_all = []
+    px_all,lambdas_i = [],[]
     for partition in subsets:
         px_all.append(cluster_cmarginal(priors_mat, partition))
-    return px_all
+        lambdas_i.append(lambdas_m[get_m(partition)])
+    return px_all, lambdas_i
 
 
 def cluster_cmarginal(priors_mat:np.ndarray, partition: list) -> list:
@@ -179,7 +188,7 @@ def get_lambdas(g_list:list, all_subs:list, n:int)-> tuple[list[Any], list[Any]]
     lambdas_I = [lambdas_m[len(subset)-1] for subset in all_subs]
     return lambdas_I, lambdas_m
 
-def get_klambdas(g_list: dict, all_subs:list)-> tuple[list[Any], dict]:
+def get_klambdas(g_list: dict)-> dict:
     """Getting lambdas for each subset for k-groups.
 
 
@@ -187,18 +196,14 @@ def get_klambdas(g_list: dict, all_subs:list)-> tuple[list[Any], dict]:
     ----------
     g_list: dict
         prior values for each cardinality
-    all_subs: list
-        partition space
-    n: int
-        number of observations
+
     Returns
     -------
     tuple[list[Any], dict]
      Lambdas for each subset, Lambdas for each cardinality (g_m/#num_of_subsets).
     """""
     lambdas_m = {cardinalities: g_list[cardinalities] * 1. / binom_op(cardinalities) for cardinalities in g_list.keys()}
-    lambdas_i = [lambdas_m[get_m(part_i)] for part_i in all_subs]
-    return lambdas_i, lambdas_m
+    return lambdas_m
 
 def get_m(part_i:list)-> tuple:
     """From partition to cardinalities
@@ -322,11 +327,15 @@ def fill_card(n:int, card:tuple)->tuple:
     return (n-sum(card),)+card
 
 
-def get_multic(poly_n:sp.polys.polytools.Poly) -> dict:
+def get_multic(poly_n:sp.polys.polytools.Poly, n:int, raw=False) -> dict:
     """Extracts the coefficients of the multivariate polynomial.
 
     Parameters
     ----------
+    raw: bool
+        whether to return raw coefficients
+    n:int
+        number of observations
     poly_n: sp.polys.polytools.Poly
         multivariate polynomial
 
@@ -338,7 +347,10 @@ def get_multic(poly_n:sp.polys.polytools.Poly) -> dict:
     """
     coeffs = {}
     for monom, coeff in zip(poly_n.monoms(), poly_n.coeffs()):
-        coeffs[monom] = coeff
+        if raw:
+            coeffs[monom] = coeff
+        else:
+            coeffs[fill_card(n,monom)] = coeff
     return coeffs
 
 def binom_op(m_tup:tuple):
