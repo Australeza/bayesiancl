@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.16.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
-#     display_name: Python [conda env:base]
+#     display_name: Python 3 (ipykernel)
 #     language: python
-#     name: conda-base-py
+#     name: python3
 # ---
 
 # ## k-groups Bayesian Clustering
@@ -37,10 +37,7 @@
 # **Questions to be addressed**
 # 1. *What is a convolution of two densities?*
 # 2. return operation or return variable preferable?
-#    
-# **TBD**
-# - how many groups of size $\mathbf{m}$ are there?
-#     - specify according to functional
+#
 
 import numpy as np
 import sympy as sp

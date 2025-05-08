@@ -1,125 +1,112 @@
 import numpy as np
-from sklearn.metrics import adjusted_rand_score, mutual_info_score, normalized_mutual_info_score
+from sklearn.metrics import adjusted_rand_score, mutual_info_score
 from scipy.optimize import linear_sum_assignment
 
-def perfect_match_distance(cluster_a:list[int], cluster_b:list[int])->int:
-    """Perfect matching distance between two clusterings.
+def count_mismatches(true_labels:list[int], aligned_labels:list[int]) ->int:
+    """Count the number of mismatches between true labels and aligned labels.
 
     Parameters
     ----------
-    cluster_a: list
-        clustering as 1d array of labels
-    cluster_b: list
-        clustering as 1d array of labels
+    true_labels:list
+        true partition in labels
+    aligned_labels:list
+        estimated partition in labels
 
     Returns
     -------
     int
-        implements the hungarian algorithm to minimize the cost.
-        Intuitively, it is minimum number of elements that need to be moved in
-        clustering b to rememble clustering a.
-        References:
-        https://www.r-bloggers.com/2012/11/matching-clustering-solutions-using-the-hungarian-method/
+        The number of mismatches
+
     """
-    #number of points in clusterings
-    nA = len(cluster_a)
-    nB = len(cluster_b)
-    if nA != nB:
-        raise ValueError("number of cluster or number of instances do not match")
+    mismatches = np.sum(np.array(true_labels) != aligned_labels)
+    return mismatches
 
-    #
-    #distinct clusters in clusterings
-    n_clusters_a = list(set(cluster_a))
-    n_clusters_b = list(set(cluster_b))
-
-    #max cluster
-    highest_cluster = max(max(n_clusters_a), max(n_clusters_b))
-    keep_idxs = list(range(nA))
-
-    # initialize cost matrix
-    nC = highest_cluster+1
-    cost_matrix = -np.ones(shape = (nC, nC), dtype=int)
-
-    for i in range(nC):
-        a_block = set([keep_idxs[j] for j in range(len(cluster_a)) if cluster_a[j] == i ])
-        for j in range(nC):
-            b_block = set([keep_idxs[k] for k in range(len(cluster_b)) if
-                        cluster_b[k] == j])
-            cost_matrix[i, j] = len(a_block.symmetric_difference(b_block))
-
-    # The Hungarian algorithm (minimizes the total cost)
-    row_ind, col_ind = linear_sum_assignment(cost_matrix)
-
-    # Total cost for matched blocks
-    total_cost = cost_matrix[row_ind, col_ind].sum()
-
-    return total_cost
-
-
-
-def variation_of_information(c:list[int], c_est:list[int])->[float,float]:
-    r"""Compute variation of information.
+def best_map(true_labels:list, pred_labels:list)->float:
+    """
+    Permutes pred_labels to match true_labels as closely as possible.
 
     Parameters
     ----------
-    c: list[int]
-        clustering 1 - true
-    c_est: list[int]
-        clustering 2 - estimated
-    k : int
-        number of clusters
+    true_labels :list
+        Ground truth labels.
+    pred_labels : list
+        Predicted labels (from clustering).
+
     Returns
     -------
-    float, float
-        Variation of Information score between X and Y.
-        According to M. Meila, Journal of Multivariate Analysis 98 (2007) 873-895
-        VI = Hc+Hc'-2*Icc', where Icc' mutual info score from sklearn
-        Examples
-             c = [1,0,0,0] and c_est = [1,0,0,0] then var_info = 0
-             c = [1,0,0,0] and c_est = [0,1,1,1] then var_info = 0
-        Remarks
-        1.
-        Adjusted variation of information is scaled between 0 and 1. (var_info/2*log(K*))
-        K*, maximum number of clusters (the K* that minimizes the VI)
-        Adjusted values close to 1 mean dissimilarity between clusters.
-        2.
-        It is advised to scale by 2*log(K*) when n varies and log(N) otherwise.
-    """""
-    #check lengths
-    if len(c) != len(c_est):
-        raise ValueError("vectors must have same length")
+    new_pred_labels : np.ndarray
+        Relabeled version of pred_labels that best aligns with true_labels.
+        Refer to "https://github.com/indigits/sparse-plex", in MATLAB.
+    """
+    true_labels = np.array(true_labels)
+    pred_labels = np.array(pred_labels)
 
-    #number of points
+    unique_true = np.unique(true_labels)
+    unique_pred = np.unique(pred_labels)
+
+    n_true = unique_true.size
+    n_pred = unique_pred.size
+    n_classes = max(n_true, n_pred)
+
+    # Build the cost matrix
+    cost_matrix = np.zeros((n_classes, n_classes), dtype=int)
+    for i, true_val in enumerate(unique_true):
+        for j, pred_val in enumerate(unique_pred):
+            matches = np.sum((true_labels == true_val) & (pred_labels == pred_val))
+            cost_matrix[i, j] = -matches  # Negative for maximization
+
+    # Solve the assignment problem (Hungarian algorithm)
+    row_ind, col_ind = linear_sum_assignment(cost_matrix)
+
+    # Build mapping from pred to true
+    label_mapping = {}
+    for i, j in zip(row_ind, col_ind):
+        if i < n_true and j < n_pred:
+            label_mapping[unique_pred[j]] = unique_true[i]
+
+    # Remap labels
+    new_pred_labels = np.vectorize(lambda x: label_mapping.get(x, x))(pred_labels)
+    n_miss = count_mismatches(true_labels, new_pred_labels)
+    return 1 - n_miss/len(true_labels)
+
+
+def variation_of_information(c: list[int], c_est: list[int]) -> float:
+    """
+    Computes adjusted Variation of Information (VI) between two clusterings.
+    Returns a value between 0 (similar) and 1 (dissimilar).
+    """
+    if len(c) != len(c_est):
+        raise ValueError("Both clusterings must be of the same length")
+
     n = len(c)
 
-    #clusters
-    clusters = sorted(list(set(c)))
-    clusters_est = sorted(list(set(c_est)))
+    # Build distributions
+    labels_c = np.array(c)
+    labels_c_est = np.array(c_est)
 
-    #probability of abstract point belonging to cluster k, respectively
-    P_k = np.array([c.count(k)/n for k in clusters])
-    P_k_est = np.array([c_est.count(k)/n for k in clusters_est])
+    clusters = np.unique(labels_c)
+    clusters_est = np.unique(labels_c_est)
 
-    #entropies
-    H_c = - np.inner(P_k, np.log(P_k))
-    H_c_est = - np.inner(P_k_est, np.log(P_k_est))
+    P_c = np.array([np.sum(labels_c == label) / n for label in clusters])
+    P_c_est = np.array([np.sum(labels_c_est == label) / n for label in clusters_est])
 
-    #mutual information given by sklearn
-    mutual_info = mutual_info_score(c, c_est)
+    H_c = -np.sum(P_c * np.log(P_c))
+    H_c_est = -np.sum(P_c_est * np.log(P_c_est))
 
+    mutual_info = mutual_info_score(labels_c, labels_c_est)
 
-    #variation of information
-    var_info = H_c + H_c_est + - 2*mutual_info
+    vi = H_c + H_c_est - 2 * mutual_info
 
-    #adjusted variation of information with the maximum number of clusters
-    max_clusters = max(len(c), len(c_est))
-    print(max_clusters)
-    adj_var_info = var_info/(2*np.log(max_clusters))
-    return 1-adj_var_info
+    # Normalize with respect to max possible entropy
+    k_star = max(len(clusters), len(clusters_est))
+    norm_vi = vi / (2 * np.log(k_star)) if k_star > 1 else 0
 
+    # Return similarity measure: 1 means identical, 0 means completely dissimilar
+    return 1 - norm_vi
 
 
-def evaluate_distances(true_x:np.array, estimated_x:np.array)->[float,float,int]:
+
+def evaluate_distances(true_x:np.array, estimated_x:np.array)->[float,float,float]:
     """Compute distance between true and estimated clusters.
 
     Parameters
@@ -132,21 +119,14 @@ def evaluate_distances(true_x:np.array, estimated_x:np.array)->[float,float,int]
     Returns
     -------
     float, float, int
-         Three different estimates between true and estimated partitions.
-         Adjusted Rand Index, variation of information distance and perfect - matching.
-         Adjusted Rand Index
-          values close to 1, similar clusterings
-                 close to 0, dissimilarity between clusterings
-                 -0.5<values<0 clusterings similarity is worse than random
-        Variation of Information-adjusted
-            values close to 1, dissimilarity
-            values close to 0, similarity
-        Perfect matching
-            Integer, number of elements to be moved from one to resemble the other.
-                The lower the better, ideally, 0.
+        Three different performance scores between true and estimated partitions.
+        Adjusted Rand Index, Variation of Information-adjusted, Perfect matching
+        In all distances:
+            values close to 1, similarity
+            values close to 0, dissimilarity
 
     """
-    rand_distance = adjusted_rand_score(true_x, estimated_x)
-    vi_distance = variation_of_information(true_x, estimated_x)
-    perfect_matching = perfect_match_distance(true_x, estimated_x)
-    return rand_distance, vi_distance, perfect_matching
+    adj_rand_distance = adjusted_rand_score(true_x, estimated_x)
+    adj_vi_distance = variation_of_information(true_x, estimated_x)
+    adj_pmd = best_map(true_x, estimated_x)
+    return adj_rand_distance, adj_vi_distance, adj_pmd

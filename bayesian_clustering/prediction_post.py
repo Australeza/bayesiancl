@@ -159,7 +159,7 @@ def card_comp_post(i: int, px:float, mat_px: np.ndarray, lambdas_card:list)-> np
         values[group] = value*comp_1
     return values
 
-def card_post_probs(n:int, priors:np.ndarray, p_x:float, lambdas_card:list, func: Callable)-> \
+def card_post_probs(n:int, priors:np.ndarray, p_x:float, lambdas_card:list)-> \
 matrix[Any, Any]:
     """Posterior probabilities of all points.
 
@@ -173,15 +173,17 @@ matrix[Any, Any]:
         normalizing constant
     lambdas_card:list
         lambdas per
-    func: Callable
-        either card_comp_post or card_k_comp_post
 
     Returns
     -------
     matrix
         (n)x(k) posterior probabilities of all points and all clusters.
     """
-    probs = [func(i, p_x, priors, lambdas_card)/sum(func(i, p_x, priors, lambdas_card)) for i in range(n)]
+    if priors.ndim==1:
+        func = card_comp_post
+    else:
+        func = card_k_comp_post
+    probs = [func(i, p_x, priors, lambdas_card) for i in range(n)]
     return np.matrix(probs)
 
 def card_max_cluster(raw_probs:np.array)->list:
@@ -256,17 +258,18 @@ def card_k_comp_post(i: int, px:float, mat_px:np.ndarray, lambdas_m:dict)->np.nd
     n = mat_px.shape[1]
     values = np.zeros(k)
     poly_minus_i = mult_polynomial(mat_px, i)
-    coeffs_minus_i = get_multic(poly_minus_i)
 
     if i == 0:
-        coeffs_i = {fill_card(n, k): v for k, v in coeffs_minus_i.items()}
+        coeffs_i = get_multic(poly_minus_i,n)
     else:
+        coeffs_minus_i = get_multic(poly_minus_i, n, raw=True)
         coeffs_i = {fill_card(n - 1, k): v for k, v in coeffs_minus_i.items()}
 
     for group in range(k):
         comp_1 = mat_px[group, i] / px
         value = lm_times_coeff(i, coeffs_i, lambdas_m, group)
         values[group] = value * comp_1
+    #print(values)
     return values
 
 

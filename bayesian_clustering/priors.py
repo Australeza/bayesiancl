@@ -29,7 +29,7 @@ def check_sums(g_m:list, lambdas_i:list = None)-> bool|tuple:
     return False
 
 #theta-priors 1-d
-def normal_conv(x_i: float, mu:float) -> float:
+def normal_conv2(x_i: float, mu:float) -> float:
     r"""
     The convolution between the distribution of the data (normal) and prior distribution (normal).
 
@@ -46,27 +46,27 @@ def normal_conv(x_i: float, mu:float) -> float:
     """
     value = integrate.quad(lambda theta: sps.norm.pdf(x_i, theta, 1)*sps.norm.pdf(theta, mu, 1),-np.inf,+np.inf)
     return value[0]
+from scipy.stats import norm
+
+def normal_conv(x_i: float, mu: float) -> float:
+    r"""
+        The convolution between the distribution of the data (normal) and prior distribution (normal).
+
+        Parameters
+        ----------
+        x_i: float
+            data point
+        mu: float
+            prior mean
+        Returns
+        -------
+        float
+            Convoluted value \int f_{N(\theta, 1)}(x_i) g_{N(mu,1)}(\theta) d\theta.
+        """
+    return norm.pdf(x_i, loc=mu, scale=np.sqrt(2))
+
 
 #theta-priors 2-d
-#theta-priors
-def normal_conv_2d(x_i: np.array, prior_mu:np.array) -> float:
-    r"""
-    The convolution between the distribution of the data (normal) and prior distribution (normal).
-
-    Parameters
-    ----------
-    x_i: float
-        data point
-    prior_mu: float
-        prior mean
-    Returns
-    -------
-    float
-        Convoluted value \int f_{N(\theta, 1)}(x_i) g_{N(mu,1)}(\theta) d\theta.
-    """
-    f = lambda theta_1, theta_2:  sps.multivariate_normal.pdf(x_i, mean= (theta_1, theta_2), cov= np.eye(2))* sps.multivariate_normal.pdf((theta_1, theta_2), mean = prior_mu, cov= np.eye(2))
-    value = integrate.dblquad(f, -np.inf, +np.inf, -np.inf, +np.inf)
-    return value[0]
 
 def anal_norm_conv_2d(x_i: np.array, prior_mu:np.array) -> float:
     """

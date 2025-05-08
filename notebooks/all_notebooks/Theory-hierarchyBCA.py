@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.16.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
-#     display_name: Python [conda env:thesis] *
+#     display_name: Python 3 (ipykernel)
 #     language: python
-#     name: conda-env-thesis-py
+#     name: python3
 # ---
 
 # ## Introduction to Bayesian Clustering
@@ -30,7 +30,6 @@
 # __Questions to be addressed__
 # - Q1: **Question: How many subsets are there for 2 groups and how many for k groups?**
 # - Q2: **HOW are the two ways (card-based, prod-form) connected?**
-# - Q3: [Convolution between distributions](#q-norm)
 #
 # __To be done__
 # 1. [Normal data cace + Plot](#norm-case)

@@ -15,36 +15,93 @@
 
 # ## Example Distances
 # ---
-# This notebook contains the ProdForm Approach implemented for the data "C:\Users\ekaranikola1\PycharmProjects\bayesian_clustering\docs\datasets\sample_size_5_2000.txt" and the resulted graph "notebooks/graphs/k_3sample_size_incr.png"
-#
-#
 # ---
 
 # +
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 import pandas as pd
-from bayesian_clustering import ProductForm, CardBased
 
-# +
-#import os
-#print(os.getcwd())
+from ast import literal_eval
+from sklearn.datasets import load_iris
+from sklearn.cluster import KMeans 
+from bayesian_clustering import ProductForm, CardBased
+from bayesian_clustering.distances import evaluate_distances
 # -
 
-file_path = '../../docs/datasets/sample_size_5_2000.txt'
-df = pd.read_csv(file_path, delimiter=',')
-df = df.iloc[1:]
+df = pd.read_csv("sampled25.txt", sep=";")
 
-df.columns
+df[:4]
 
-df.iloc[:6]
+df["flower"] =df["flower"].apply(lambda x: literal_eval(x))
+df.columns, df.dtypes
 
-# Convert columns to numeric if necessary
-df['sample_size'] = pd.to_numeric(df['sample_size'])
-df['adj_rand_index'] = pd.to_numeric(df[' adj_rand_index'])
-df['var_info'] = pd.to_numeric(df[' var_info'])
+sns.scatterplot(x = df["petal_area"], y= df["sepal_area"], hue=df["target"], palette="tab10")
+plt.title("True data/ clusters")
+
+data = list(map(list,df.flower))
+
+# +
+#kmeans
+kmeans = KMeans(n_clusters=3, random_state=0, n_init="auto").fit(data)
+
+#labels and centroids petal
+kmeans_labels = kmeans.labels_
+centers_kmeans = kmeans.cluster_centers_
+
+# +
+means = centers_kmeans
+
+#sepal
+prod_prior = ProductForm(use_partition_space = False)
+
+#fitting given prior means for normal data
+prod_prior.fit(np.array(data), prior_means = means)
+
+#predict labels for data
+prod_labels = prod_prior.predict(np.array(data))[0][0]
+
+#check prior assumptions
+prod_prior.assumptions_partition_prior_check()
+# -
+
+prod_labels
+
+# +
+card_prior = CardBased()
+a
+#fitting given prior means for normal data
+card_prior.fit(np.array(data), prior_means = means)
+
+#predict labels for data
+card_labels = card_prior.predict(np.array(data))
+ 
+#bs.assumptions_partition_prior_check()
+d1, d2, d3 = evaluate_distances(df["target"].tolist(), labels)
+# -
+
+d1
+
+# +
+fig, axes = plt.subplots(1, 3, figsize=(12, 5))  # Adjust figsize as needed
+
+# First scatter plot
+sns.scatterplot(ax=axes[0], x=df["petal_area"], y=df["sepal_area"], hue=prod_labels, palette="tab10")
+axes[0].set_title("Prod Labels")
+
+# Second scatter plot
+sns.scatterplot(ax=axes[1], x=df["petal_area"], y=df["sepal_area"], hue=df["target"], palette="tab10")
+axes[1].set_title("True Labels")
+
+sns.scatterplot(ax=axes[2], x=df["petal_area"], y=df["sepal_area"], hue=card_labels, palette="tab10")
+axes[2].set_title("Card Labels")
+
+plt.tight_layout()
+plt.show()
+# -
+
+
 
 # +
 # Filter data: Only keep values where sample_size >= 5
@@ -67,7 +124,7 @@ plt.ylabel("Performance Metrics")
 plt.ylim(bottom=0)
 plt.title("Product Form, for K = 3")
 plt.legend(bbox_to_anchor=(1.01, 0.93))
-plt.savefig('k_3sample_size_incr.png', bbox_inches='tight')
+#plt.savefig('k_3sample_size_incr.png', bbox_inches='tight')
 # -
 
 
@@ -87,26 +144,8 @@ labels = bs.predict(np.array(flower))[0]
 
 #check prior assumptions
 bs.assumptions_partition_prior_check()
-
-# +
-import time
-import sys
-
-def print_progress_bar(iteration, total, length=30):
-    percent = 100 * (iteration / float(total))
-    filled_length = int(length * iteration // total)
-    bar = '█' * filled_length + '-' * (length - filled_length)
-    print(f'\rProgress: |{bar}| {percent:.1f}% Complete', end='')
-    if iteration == total:
-        print()  # Newline on completion
-
-# Simulate a loop
-total_iterations = 100
-for i in range(total_iterations + 1):
-    print_progress_bar(i, total_iterations)
-    time.sleep(0.05)  # simulate work
-
 # -
+
 
 
 

@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.16.1
+#       jupytext_version: 1.17.0
 #   kernelspec:
-#     display_name: Python [conda env:thesis] *
+#     display_name: Python 3 (ipykernel)
 #     language: python
-#     name: conda-env-thesis-py
+#     name: python3
 # ---
 
 # ## Simulation product-form
@@ -116,7 +116,7 @@ plot_points(sampled_x, true_means, K)
 values_L = sample_uniprod(N,K)
 
 #print resulted matrix
-values_L.shape
+values_L.shape, values_L
 
 
 # -
