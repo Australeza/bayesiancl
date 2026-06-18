@@ -1,71 +1,111 @@
 # bayesiancl
-The package contains two methods of bayesian clustering based on projection theory.
-- The *ProdForm* assumes the priors on the partitions are in product form and,
-- the *CardBased* assumes the prior on the partitions varies based on the cardinality-array of the respective partition.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
+[![Status](https://img.shields.io/badge/status-ongoing-orange.svg)](#project-status)
+
+A Python package implementing two methods of Bayesian clustering based on projection theory:
+* **ProdForm**: Assumes the priors on the partitions are in product form.
+* **CardBased**: Assumes the prior on the partitions varies based on the cardinality-array of the respective partition.
+
+---
 
 ## Description
-Bayesian Clustering is a technique using Bayesian Inference to cluster data based on its distribution.
-It is assumed that the clusters are normally distributed with "true" and unknown means.
-- The *target* of this method is to best partition the data into clusters.
-- The number of cluster  is *NOT* assumed to be fixed but an upper bound k is given as input to the algorithm.
 
-## Usage
-- To see the project in action, check out the .py version of this simple [example](notebooks/example-iris.py)
-#### This project includes:
-1. Theory derived from Bayesian Inference.
-2. The *ProdForm* and *CardBased* algorithms.
-3. Performance evaluation distances
-4. Simulated Datasets and results.
-5. Application on the Iris Dataset.
+Bayesian Clustering uses Bayesian Inference to partition data based on its distribution. It is assumed that the clusters are normally distributed with unknown "true" means.
 
-The theory is addressed in the [Thesis Document](docs/Bayesian_Clustering_MSc.pdf).
+* **Objective**: Find the optimal partition of the data into clusters.
+* **Number of Clusters**: The number of clusters is **not** assumed to be fixed; instead, an upper bound $k$ is given as input to the algorithm.
 
-## Visuals
-Implementation of ProdForm on the iris dataset.
+---
 
-- Resulted partition when initialized with upper bound 3, against KMeans with predetermined number of clusters equal to 3.
-![Clustering of ProdForm](notebooks/graphs/iris_K3.png)
-- Resulted partition when initialized with upper bound 7 against KMeans with predetermined number of clusters equal to 7.
-![Clustering of ProdForm](notebooks/graphs/iris_K7.png)
-- Recovering the Normal distribution of the clusters
-![Clustering of ProdForm](notebooks/graphs/iris_contours_posterior.png)
-The priors are assumed to be the KMeans centers
-## Installation of bayesiancl
-Make sure Git is installed on your machine.
+## Features
 
-### 1. Clone the repository to your local machine:
+This project includes:
+1. Mathematical theory derived from Bayesian Inference.
+2. Implementations of the **ProdForm** and **CardBased** algorithms.
+3. Performance evaluation distance metrics.
+4. Simulated datasets and results.
+5. Application on the Iris dataset.
+
+> [!NOTE]
+> The detailed theoretical background is addressed in the [Thesis Document](docs/Bayesian_Clustering_MSc.pdf).
+
+---
+
+## Installation
+
+Ensure you have [Git](https://git-scm.com/) installed on your machine.
+
+### 1. Clone the repository
 ```bash
 git clone https://github.com/Australeza/bayesiancl.git
 cd bayesiancl
 ```
 
 ### 2. Install the package
+For regular installation:
 ```bash
 pip install .
 ```
+
 Or in development mode (if you plan to modify the code):
 ```bash
 pip install -e .
 ```
-### 3. (Optional) Install dependencies
+
+### 3. (Optional) Install development dependencies
 ```bash
 pip install -r requirements_dev.txt
 ```
 
+---
 
-## Authors and acknowledgment
+## Usage
 
-**Elisavet Karanikola**
+To see the package in action, check out the Python implementation in this simple [example script](notebooks/example-iris.py).
 
-Master's student, [Applied Mathematics](https://vu.nl/en/about-vu/faculties/faculty-of-science/departments/mathematics)
+---
 
-elizkaranikola@gmail.com
+## Visuals
 
-## License
-[MIT License](https://opensource.org/license/mit)
+Below is the implementation of **ProdForm** on the Iris dataset (where the priors are assumed to be the K-Means centers).
+
+### Clustering Comparison
+
+| Initialized with Upper Bound $k = 3$ | Initialized with Upper Bound $k = 7$ |
+| :---: | :---: |
+| <img src="notebooks/graphs/iris_K3.png" width="380" alt="Clustering of ProdForm (k=3)"> | <img src="notebooks/graphs/iris_K7.png" width="380" alt="Clustering of ProdForm (k=7)"> |
+| *Resulting partition vs. K-Means ($k=3$)* | *Resulting partition vs. K-Means ($k=7$)* |
+
+### Recovering Normal Distributions
+<img src="notebooks/graphs/iris_contours_posterior.png" width="500" alt="Posterior Contours">  
+*Recovering the normal distribution of the clusters.*
+
+---
+
+## Authors and Acknowledgment
+
+**Elisavet Karanikola**  
+Master's student, [Applied Mathematics](https://vu.nl/en/about-vu/faculties/faculty-of-science/departments/mathematics)  
+Email: [elizkaranikola@gmail.com](mailto:elizkaranikola@gmail.com)
+
+---
 
 ## Credits
-This repository was developed during my internship at [**KPMG**](https://kpmg.com/nl/nl/home.html), as part of my Master's Thesis titled "Bayesian Clustering" submitted to [**Vrije Universiteit Amsterdam**](https://vu.nl/en) in [May 2025].
 
-## Project status
-#### Ongoing..
+This repository was developed during my internship at [**KPMG**](https://kpmg.com/nl/nl/home.html), as part of my Master's Thesis titled *"Bayesian Clustering"* submitted to [**Vrije Universiteit Amsterdam**](https://vu.nl/en) in May 2025.
+
+---
+
+## License
+
+This project is licensed under the [MIT License](https://opensource.org/license/mit).
+
+---
+
+## Project Status
+
+Ongoing.
+
+
