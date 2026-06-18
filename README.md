@@ -75,7 +75,7 @@ Below is the implementation of **ProdForm** on the Iris dataset (where the prior
 
 | Initialized with Upper Bound $k = 3$ | Initialized with Upper Bound $k = 7$ |
 | :---: | :---: |
-| <img src="notebooks/graphs/iris_K3.png" width="380" alt="Clustering of ProdForm (k=3)"> | <img src="notebooks/graphs/iris_K7.png" width="380" alt="Clustering of ProdForm (k=7)"> |
+| <img src="notebooks/graphs/iris_K3.png" width="500" alt="Clustering of ProdForm (k=3)"> | <img src="notebooks/graphs/iris_K7.png" width="500" alt="Clustering of ProdForm (k=7)"> |
 | *Resulting partition vs. K-Means ($k=3$)* | *Resulting partition vs. K-Means ($k=7$)* |
 
 ### Recovering Normal Distributions
