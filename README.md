@@ -79,8 +79,9 @@ Below is the implementation of **ProdForm** on the Iris dataset (where the prior
 | Resulting partition vs. K-Means ($k=3$)* | *Resulting partition vs. K-Means ($k=7$) |
 
 ### Recovering Normal Distributions
+The image depicts the recovered distributions and their corresponding PDFs around the predicted centroids. Assumption: the centroids are d-close to each other, where the separation distance satisfies d:k(d).
+
 <img src="notebooks/graphs/iris_contours_posterior.png" width="500" alt="Posterior Contours">  
-Recovering the normal distribution of the clusters.
 
 ---
 
