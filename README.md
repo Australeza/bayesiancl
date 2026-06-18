@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
-[![Status](https://img.shields.io/badge/status-ongoing-orange.svg)](#project-status)
+[![Status](https://img.shields.io/badge/status-completed-orange.svg)](#project-status)
 
 A Python package implementing two methods of Bayesian clustering based on projection theory:
 * **ProdForm**: Assumes the priors on the partitions are in product form.
@@ -106,6 +106,6 @@ This project is licensed under the [MIT License](https://opensource.org/license/
 
 ## Project Status
 
-Ongoing.
+Completed.
 
 
