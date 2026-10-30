@@ -124,9 +124,7 @@ Main constructor options:
 
 Recovered cluster distributions, with contours of their normal PDFs around the posterior centroids. Assumption: the centroids are d-close to each other, where the separation distance satisfies d:k(d).
 
-<p align="center">
-  <img src="notebooks/graphs/iris_contours_posterior.png" width="500" alt="Posterior contours of the recovered clusters">
-</p>
+<img src="notebooks/graphs/iris_contours_posterior.png" width="500" alt="Posterior contours of the recovered clusters">
 
 ### Simulated data
 
