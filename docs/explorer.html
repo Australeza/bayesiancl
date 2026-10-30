@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bayesiancl explorer</title>
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<style>
+  :root { --bg:#fbfbfa; --card:#fff; --ink:#1d1d1f; --muted:#6b6b70; --line:#e6e6e3; --accent:#1f77b4; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+  main { max-width:1180px; margin:0 auto; padding:40px 20px 56px; }
+  h1 { font-size:28px; margin:0 0 6px; letter-spacing:-.01em; }
+  h1 code { font-size:.9em; background:#eef3f8; padding:1px 7px; border-radius:6px; }
+  .lede { color:var(--muted); max-width:760px; margin:0 0 28px; }
+  .controls { display:flex; flex-wrap:wrap; align-items:center; gap:18px 28px;
+              background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 20px; }
+  .slider { display:flex; align-items:center; gap:14px; flex:1 1 320px; }
+  .slider label { font-weight:600; white-space:nowrap; }
+  input[type=range] { flex:1; accent-color:var(--accent); }
+  .kval { font:600 22px/1 ui-monospace, Menlo, monospace; min-width:2ch; text-align:center; }
+  .stats { display:flex; gap:22px; flex-wrap:wrap; }
+  .stat { font-size:13px; color:var(--muted); }
+  .stat b { display:block; font:600 20px/1.2 ui-monospace, Menlo, monospace; color:var(--ink); }
+  #plot { margin-top:18px; background:var(--card); border:1px solid var(--line); border-radius:12px; min-height:460px; }
+  .note { color:var(--muted); font-size:13px; margin-top:14px; max-width:860px; }
+  footer { margin-top:28px; font-size:13px; color:var(--muted); }
+  a { color:var(--accent); }
+  @media (max-width:700px) { main { padding:24px 16px 40px; } h1 { font-size:22px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Interactive explorer for <code>bayesiancl</code></h1>
+  <p class="lede">Bayesian clustering of the Iris dataset (petal area vs. sepal area). Drag the slider to change the upper bound <i>k</i>, which is the number of prior means given to <b>ProdForm</b> (K-Means centres are used as priors). Hover over a point to see the flower's details.</p>
+
+  <div class="controls">
+    <div class="slider">
+      <label for="k">Upper bound k</label>
+      <input id="k" type="range" min="2" max="7" step="1" value="3">
+      <span class="kval" id="kval">3</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="found">–</b>clusters found by ProdForm</div>
+      <div class="stat"><b id="ari-pf">–</b>ARI ProdForm</div>
+      <div class="stat"><b id="ari-km">–</b>ARI K-Means</div>
+    </div>
+  </div>
+
+  <div id="plot"></div>
+
+  <p class="note">Colours are matched to the true species, so the same group has the same colour in every panel. ARI is the adjusted Rand index against the true species (1 = perfect agreement). All results are produced by the <code>bayesian_clustering</code> package with <a href="https://github.com/Australeza/bayesiancl/blob/main/notebooks/make_explorer_data.py"><code>notebooks/make_explorer_data.py</code></a> (<code>ProductForm(sampling_size=500)</code>, seed 42).</p>
+  <footer>Elisavet Karanikola · <a href="https://github.com/Australeza/bayesiancl">github.com/Australeza/bayesiancl</a></footer>
+</main>
+
+<script>
+let DATA;
+const COLORS = ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
+const TITLES = ["ProdForm", "K-Means", "True species"];
+
+function hover(labels, name) {
+  return DATA.x.map((x, i) =>
+    `<b>${DATA.species[i]}</b><br>Petal area: ${x.toFixed(2)} cm²<br>Sepal area: ${DATA.y[i].toFixed(2)} cm²<br>${name} cluster: ${labels[i]}`);
+}
+
+function draw(k) {
+  const run = DATA.runs[k];
+  const panels = [run.prodform, run.kmeans, DATA.true];
+  const traces = panels.map((labels, p) => ({
+    x: DATA.x, y: DATA.y, type: "scatter", mode: "markers",
+    xaxis: "x" + (p ? p + 1 : ""), yaxis: "y" + (p ? p + 1 : ""),
+    marker: { color: labels.map(l => COLORS[l % 10]), size: 8, line: { color: "#fff", width: 0.6 } },
+    text: hover(labels, TITLES[p]), hovertemplate: "%{text}<extra></extra>", showlegend: false
+  }));
+  traces.push({
+    x: run.priors.map(c => c[0]), y: run.priors.map(c => c[1]), type: "scatter", mode: "markers",
+    marker: { symbol: "x", size: 11, color: "#1d1d1f", line: { width: 1 } },
+    name: "Prior means", hovertemplate: "Prior mean<br>(%{x:.2f}, %{y:.2f})<extra></extra>"
+  });
+  const narrow = window.innerWidth < 700;
+  const axis = { title: { text: "Petal area (cm²)" }, gridcolor: "#eee", zeroline: false };
+  const yaxis = { gridcolor: "#eee", zeroline: false, matches: "y", title: { text: narrow ? "Sepal area (cm²)" : "" } };
+  const layout = {
+    grid: narrow ? { rows: 3, columns: 1, pattern: "independent", ygap: 0.12 }
+                 : { rows: 1, columns: 3, pattern: "independent" },
+    margin: { t: 50, r: 20, b: 60, l: 60 }, height: narrow ? 1150 : 460,
+    paper_bgcolor: "#fff", plot_bgcolor: "#fff",
+    font: { family: "-apple-system, Segoe UI, Inter, sans-serif", size: 12, color: "#1d1d1f" },
+    xaxis: { ...axis, title: { text: narrow ? "" : "Petal area (cm²)" } },
+    xaxis2: { ...axis, matches: "x", title: { text: narrow ? "" : "Petal area (cm²)" } }, xaxis3: { ...axis, matches: "x" },
+    yaxis: { ...yaxis, matches: undefined, title: { text: "Sepal area (cm²)" } }, yaxis2: yaxis, yaxis3: yaxis,
+    legend: { orientation: "h", x: 1, y: narrow ? 1.04 : 1.12, xanchor: "right" },
+    annotations: [
+      `ProdForm (${run.prodform_k} clusters)`, `K-Means (${k} clusters)`, "True species"
+    ].map((t, i) => ({ text: `<b>${t}</b>`, showarrow: false, xref: `x${i ? i + 1 : ""} domain`,
+                      x: 0.5, y: 1, xanchor: "center", yanchor: "bottom", yref: `y${i ? i + 1 : ""} domain`, font: { size: 13 } }))
+  };
+  Plotly.react("plot", traces, layout, { responsive: true, displaylogo: false });
+  document.getElementById("kval").textContent = k;
+  document.getElementById("found").textContent = run.prodform_k;
+  document.getElementById("ari-pf").textContent = run.ari_pf.toFixed(2);
+  document.getElementById("ari-km").textContent = run.ari_km.toFixed(2);
+}
+
+const slider = document.getElementById("k");
+fetch("explorer_data.json")
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(d => { DATA = d; draw(+slider.value); })
+  .catch(() => {
+    document.getElementById("plot").innerHTML =
+      '<p style="padding:24px;color:#6b6b70">Could not load explorer_data.json. Generate it with <code>python notebooks/make_explorer_data.py</code>.</p>';
+  });
+slider.addEventListener("input", e => DATA && draw(+e.target.value));
+let wasNarrow = window.innerWidth < 700;
+window.addEventListener("resize", () => {
+  const n = window.innerWidth < 700;
+  if (n !== wasNarrow) { wasNarrow = n; if (DATA) draw(+slider.value); }
+});
+</script>
+</body>
+</html>
