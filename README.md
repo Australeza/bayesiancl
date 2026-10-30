@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 [![Status](https://img.shields.io/badge/status-completed-orange.svg)](#project-status)
+[![Interactive demo](https://img.shields.io/badge/demo-interactive%20explorer-2ea44f.svg)](https://australeza.github.io/bayesiancl/explorer.html)
 
 **Bayesian clustering without fixing the number of clusters.** `bayesiancl` partitions data with Bayesian inference: you give an upper bound $k$ on the number of clusters, and the method finds the most probable partition of the data, which may use fewer clusters.
 
@@ -113,18 +114,34 @@ Main constructor options:
 
 ### Iris dataset
 
+> 🔎 **[Try the interactive explorer](https://australeza.github.io/bayesiancl/explorer.html)**: change the upper bound $k$ with a slider and hover over points to inspect them.
+
 **ProdForm** on Iris (petal area vs. sepal area), using K-Means centres as prior means:
 
-| Upper bound $k = 3$ | Upper bound $k = 7$ |
-| :---: | :---: |
-| <img src="notebooks/graphs/iris_K3.png" width="500" alt="ProdForm clustering of Iris with k=3"> | <img src="notebooks/graphs/iris_K7.png" width="500" alt="ProdForm clustering of Iris with k=7"> |
-| ProdForm vs. K-Means vs. true labels ($k = 3$) | ProdForm vs. K-Means vs. true labels ($k = 7$) |
+<p align="center">
+  <img src="notebooks/graphs/iris_K3.png" width="900" alt="ProdForm, K-Means and true labels on Iris with k=3">
+</p>
+
+<p align="center">
+  <img src="notebooks/graphs/iris_K7.png" width="900" alt="ProdForm, K-Means and true labels on Iris with k=7">
+</p>
+
+Colours are matched to the true species, so the same group has the same colour in every panel.
+
+Everything in this section is reproducible from the repository (run from the repo root):
+
+```bash
+python notebooks/make_readme_figures.py   # the two figures above
+python notebooks/make_explorer_data.py    # data for the interactive explorer (docs/explorer_data.json)
+```
 
 ### Recovered normal distributions
 
 Recovered cluster distributions, with contours of their normal PDFs around the posterior centroids. Assumption: the centroids are d-close to each other, where the separation distance satisfies d:k(d).
 
-<img src="notebooks/graphs/iris_contours_posterior.png" width="500" alt="Posterior contours of the recovered clusters">
+<p align="center">
+  <img src="notebooks/graphs/iris_contours_posterior.png" width="500" alt="Posterior contours of the recovered clusters">
+</p>
 
 ### Simulated data
 
