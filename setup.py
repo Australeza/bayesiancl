@@ -35,7 +35,7 @@ setup(
     include_package_data=True,
     keywords="bayesian_clustering",
     name="bayesian_clustering",
-    packages=find_packages(include=["bayesian_clustering"]),
+    packages=find_packages(include=["bayesian_clustering", "bayesian_clustering.*"]),
     setup_requires=setup_requirements,
     test_suite="tests",
     tests_require=test_requirements,
