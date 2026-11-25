@@ -36,7 +36,7 @@ It implements two methods, built on projection theory, that differ in the prior 
 - The model combines these priors with the data to compute posterior probabilities over partitions, then returns the **maximum a posteriori (MAP) partition**.
 - 1-D and 2-D data are supported.
 
-The full theory (derivations, assumptions and proofs) is in the MSc thesis *Bayesian Clustering* (Vrije Universiteit Amsterdam, 2025), available on request.
+The full theory (derivations, assumptions and proofs) is in the [thesis](docs/Bayesian_Clustering_MSc.pdf) (July 2025 version).
 
 ---
 
@@ -179,7 +179,7 @@ The theoretical framework behind this package builds on the unpublished notes *P
 
 ### References
 
-[1] E. N. Belitser. *Posterior analysis for k-groups partitions*. Unpublished notes, Vrije Universiteit Amsterdam.
+[1] Eduard Belitser. “Posterior analysis for k-groups partitions.” Notes [Oct. 2024] and personal communication [2024–2025] (2024).
 
 [2] F. Abramovich, Y. Benjamini, D. L. Donoho and I. M. Johnstone. Adapting to unknown sparsity by controlling the false discovery rate. *The Annals of Statistics*, 34(2):584–653, 2006.
 
