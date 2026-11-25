@@ -187,28 +187,43 @@ The theoretical framework behind this package builds on the unpublished notes *P
 
 [4] E. Belitser and S. Ghosal. Empirical Bayes oracle uncertainty quantification for regression. *The Annals of Statistics*, 48(6):3113–3137, 2020.
 
-[5] E. Belitser and N. Nurushev. Local posterior concentration rate for multilevel sparse sequences. In *Bayesian Statistics in Action: BAYSM 2016, Florence, Italy*, pp. 51–66. Springer, 2017.
+[5] E. Belitser and N. Nurushev. General framework for projection structures. arXiv preprint [arXiv:1904.01003](https://arxiv.org/abs/1904.01003), 2019.
 
-[6] E. Belitser and N. Nurushev. Needles and straw in a haystack: Robust confidence for possibly sparse sequences. 2020.
+[6] E. Belitser and N. Nurushev. Local posterior concentration rate for multilevel sparse sequences. In *Bayesian Statistics in Action: BAYSM 2016, Florence, Italy*, pp. 51–66. Springer, 2017.
 
-[7] E. Belitser, N. Nurushev and P. Serra. Robust estimation of sparse signal with unknown sparsity cluster value. In *Conference of the International Society for Non-Parametric Statistics*, pp. 77–87. Springer, 2018.
+[7] E. Belitser and N. Nurushev. Needles and straw in a haystack: Robust confidence for possibly sparse sequences. 2020.
 
-[8] I. Castillo and A. W. van der Vaart. Supplement to "Needles and straw in a haystack: Posterior concentration for possibly sparse sequences". *The Annals of Statistics*, 40(4), 2012.
+[8] E. Belitser, N. Nurushev and P. Serra. Robust estimation of sparse signal with unknown sparsity cluster value. In *Conference of the International Society for Non-Parametric Statistics*, pp. 77–87. Springer, 2018.
 
-[9] A. K. Jain. Data clustering: 50 years beyond K-means. *Pattern Recognition Letters*, 31(8):651–666, 2010. [doi:10.1016/j.patrec.2009.09.011](https://doi.org/10.1016/j.patrec.2009.09.011)
+[9] I. Castillo and A. W. van der Vaart. Supplement to "Needles and straw in a haystack: Posterior concentration for possibly sparse sequences". *The Annals of Statistics*, 40(4), 2012.
 
-[10] M. Meilă. Comparing clusterings: an information based distance. *Journal of Multivariate Analysis*, 98(5):873–895, 2007.
+[10] T. M. Cover. *Elements of Information Theory*. John Wiley & Sons, 1999.
 
-[11] P. Nerurkar, A. Shirke, M. Chandane and S. Bhirud. Empirical analysis of data clustering algorithms. *Procedia Computer Science*, 125:770–779, 2018. [doi:10.1016/j.procs.2017.12.099](https://doi.org/10.1016/j.procs.2017.12.099)
+[11] E. B. Fowlkes and C. L. Mallows. A method for comparing two hierarchical clusterings. *Journal of the American Statistical Association*, 78(383):553–569, 1983.
 
-[12] B. Szabó and A. van der Vaart. *Bayesian Statistics*. Lecture notes, version 20-7-2023, 2023.
+[12] L. Hubert and P. Arabie. Comparing partitions. *Journal of Classification*, 2:193–218, 1985.
 
-[13] T. Velmurugan and T. Santhanam. A survey of partition based clustering algorithms in data mining: An experimental approach. *Information Technology Journal*, 10(3):478–484, 2011.
+[13] A. K. Jain. Data clustering: 50 years beyond K-means. *Pattern Recognition Letters*, 31(8):651–666, 2010. [doi:10.1016/j.patrec.2009.09.011](https://doi.org/10.1016/j.patrec.2009.09.011)
 
-[14] S. Wade and Z. Ghahramani. Bayesian cluster analysis: Point estimation and credible balls (with discussion). *Bayesian Analysis*, 13(2):559–626, 2018.
+[14] KPMG. KPMG official page. 2025. https://kpmg.com/nl/nl/home/over-ons.html (visited 20 April 2025).
 
-[15] KPMG. KPMG official page. 2025. https://kpmg.com/nl/nl/home/over-ons.html (visited 20 April 2025).
+[15] M. Meilă. Comparing clusterings: an information based distance. *Journal of Multivariate Analysis*, 98(5):873–895, 2007.
 
+[16] M. Meilă and D. Heckerman. An experimental comparison of model-based clustering methods. *Machine Learning*, 42:9–29, 2001.
+
+[17] P. Nerurkar, A. Shirke, M. Chandane and S. Bhirud. Empirical analysis of data clustering algorithms. *Procedia Computer Science*, 125:770–779, 2018. [doi:10.1016/j.procs.2017.12.099](https://doi.org/10.1016/j.procs.2017.12.099)
+
+[18] C. H. Papadimitriou and K. Steiglitz. *Combinatorial Optimization: Algorithms and Complexity*. Courier Corporation, 1998.
+
+[19] A. Patrikainen and M. Meilă. Comparing subspace clusterings. *IEEE Transactions on Knowledge and Data Engineering*, 18(7):902–916, 2006.
+
+[20] W. M. Rand. Objective criteria for the evaluation of clustering methods. *Journal of the American Statistical Association*, 66(336):846–850, 1971.
+
+[21] B. Szabó and A. van der Vaart. *Bayesian Statistics*. Lecture notes, version 20-7-2023, 2023.
+
+[22] T. Velmurugan and T. Santhanam. A survey of partition based clustering algorithms in data mining: An experimental approach. *Information Technology Journal*, 10(3):478–484, 2011.
+
+[23] S. Wade and Z. Ghahramani. Bayesian cluster analysis: Point estimation and credible balls (with discussion). *Bayesian Analysis*, 13(2):559–626, 2018.
 
 ---
 
