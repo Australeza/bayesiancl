@@ -36,7 +36,7 @@ It implements two methods, built on projection theory, that differ in the prior 
 - The model combines these priors with the data to compute posterior probabilities over partitions, then returns the **maximum a posteriori (MAP) partition**.
 - 1-D and 2-D data are supported.
 
-The full theory (derivations, assumptions and proofs) is in the [thesis](docs/Bayesian_Clustering_MSc.pdf).
+The full theory (derivations, assumptions and proofs) is in the MSc thesis *Bayesian Clustering* (Vrije Universiteit Amsterdam, 2025), available on request.
 
 ---
 
