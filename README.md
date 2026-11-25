@@ -173,6 +173,10 @@ docs/                     # thesis PDF and datasets
 
 Developed during an internship at [**KPMG**](https://kpmg.com/nl/nl/home.html), as part of the Master's thesis *"Bayesian Clustering"*, submitted to Vrije Universiteit Amsterdam in May 2025.
 
+### Acknowledgements
+
+The theoretical framework behind this package builds on unpublished notes on Bayesian clustering by **prof. dr. E. N. Belitser** (Vrije Universiteit Amsterdam), who supervised the thesis. I am grateful to him for sharing that work and for his guidance throughout the project. I also thank dr. P. J. de Andrade Serra for acting as second reader, and R. van der Wal and the Advanced Analytics & Big Data team at KPMG for hosting the internship.
+
 ---
 
 ## License
