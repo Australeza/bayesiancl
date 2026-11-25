@@ -181,6 +181,38 @@ The theoretical framework behind this package builds on the unpublished notes *P
 
 [1] E. N. Belitser. *Posterior analysis for k-groups partitions*. Unpublished notes, Vrije Universiteit Amsterdam.
 
+References cited in the thesis:
+
+[2] F. Abramovich, Y. Benjamini, D. L. Donoho and I. M. Johnstone. Adapting to unknown sparsity by controlling the false discovery rate. *The Annals of Statistics*, 34(2):584–653, 2006.
+
+[3] D. L. Banks and S. E. Fienberg. Statistics, Multivariate. In R. A. Meyers (ed.), *Encyclopedia of Physical Science and Technology* (3rd ed.), pp. 851–889. Academic Press, 2003. [doi:10.1016/B0-12-227410-5/00731-6](https://doi.org/10.1016/B0-12-227410-5/00731-6)
+
+[4] E. Belitser and S. Ghosal. Empirical Bayes oracle uncertainty quantification for regression. *The Annals of Statistics*, 48(6):3113–3137, 2020.
+
+[5] E. Belitser and N. Nurushev. Local posterior concentration rate for multilevel sparse sequences. In *Bayesian Statistics in Action: BAYSM 2016, Florence, Italy*, pp. 51–66. Springer, 2017.
+
+[6] E. Belitser and N. Nurushev. Needles and straw in a haystack: Robust confidence for possibly sparse sequences. 2020.
+
+[7] E. Belitser, N. Nurushev and P. Serra. Robust estimation of sparse signal with unknown sparsity cluster value. In *Conference of the International Society for Non-Parametric Statistics*, pp. 77–87. Springer, 2018.
+
+[8] I. Castillo and A. W. van der Vaart. Supplement to "Needles and straw in a haystack: Posterior concentration for possibly sparse sequences". *The Annals of Statistics*, 40(4), 2012.
+
+[9] A. K. Jain. Data clustering: 50 years beyond K-means. *Pattern Recognition Letters*, 31(8):651–666, 2010. [doi:10.1016/j.patrec.2009.09.011](https://doi.org/10.1016/j.patrec.2009.09.011)
+
+[10] M. Meilă. Comparing clusterings: an information based distance. *Journal of Multivariate Analysis*, 98(5):873–895, 2007.
+
+[11] P. Nerurkar, A. Shirke, M. Chandane and S. Bhirud. Empirical analysis of data clustering algorithms. *Procedia Computer Science*, 125:770–779, 2018. [doi:10.1016/j.procs.2017.12.099](https://doi.org/10.1016/j.procs.2017.12.099)
+
+[12] B. Szabó and A. van der Vaart. *Bayesian Statistics*. Lecture notes, version 20-7-2023, 2023.
+
+[13] T. Velmurugan and T. Santhanam. A survey of partition based clustering algorithms in data mining: An experimental approach. *Information Technology Journal*, 10(3):478–484, 2011.
+
+[14] S. Wade and Z. Ghahramani. Bayesian cluster analysis: Point estimation and credible balls (with discussion). *Bayesian Analysis*, 13(2):559–626, 2018.
+
+[15] KPMG. KPMG official page. 2025. https://kpmg.com/nl/nl/home/over-ons.html (visited 20 April 2025).
+
+BibTeX for [1]:
+
 ```bibtex
 @unpublished{belitser_kgroups,
   author = {Belitser, Eduard N.},
