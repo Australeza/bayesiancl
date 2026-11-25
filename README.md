@@ -31,14 +31,12 @@ It implements two methods, built on projection theory, that differ in the prior 
 
 ## How it works
 
-The methods implemented here are based on the unpublished notes *Posterior analysis for k-groups partitions* by E. N. Belitser [[1]](#references).
+The methods implemented here are based on the unpublished notes *Posterior analysis for k-groups partitions* by E. N. Belitser [[1]](#references); the full theory (derivations, assumptions and proofs) is in the [thesis](docs/Bayesian_Clustering_MSc.pdf) (July 2025 version).
 
 - Each cluster is assumed to be normally distributed around an unknown "true" mean.
 - You supply **prior means**, one per possible cluster. Their number sets the upper bound $k$. For example, they can be K-Means centres.
 - The model combines these priors with the data to compute posterior probabilities over partitions, then returns the **maximum a posteriori (MAP) partition**.
 - 1-D and 2-D data are supported.
-
-The full theory (derivations, assumptions and proofs) is in the [thesis](docs/Bayesian_Clustering_MSc.pdf) (July 2025 version), which builds on Belitser's notes [[1]](#references).
 
 ---
 
