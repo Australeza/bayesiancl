@@ -175,7 +175,19 @@ Developed during an internship at [**KPMG**](https://kpmg.com/nl/nl/home.html), 
 
 ### Acknowledgements
 
-The theoretical framework behind this package builds on unpublished notes on Bayesian clustering by **prof. dr. E. N. Belitser** (Vrije Universiteit Amsterdam), who supervised the thesis. I am grateful to him for sharing that work and for his guidance throughout the project. I also thank dr. P. J. de Andrade Serra for acting as second reader, and R. van der Wal and the Advanced Analytics & Big Data team at KPMG for hosting the internship.
+The theoretical framework behind this package builds on the unpublished notes *Posterior analysis for k-groups partitions* by **prof. dr. E. N. Belitser** (Vrije Universiteit Amsterdam) [[1]](#references), who supervised the thesis. I am grateful to him for sharing that work and for his guidance throughout the project. I also thank dr. P. J. de Andrade Serra for acting as second reader, and R. van der Wal and the Advanced Analytics & Big Data team at KPMG for hosting the internship.
+
+### References
+
+[1] E. N. Belitser. *Posterior analysis for k-groups partitions*. Unpublished notes, Vrije Universiteit Amsterdam.
+
+```bibtex
+@unpublished{belitser_kgroups,
+  author = {Belitser, Eduard N.},
+  title  = {Posterior analysis for k-groups partitions},
+  note   = {Unpublished notes, Vrije Universiteit Amsterdam}
+}
+```
 
 ---
 
