@@ -181,8 +181,6 @@ The theoretical framework behind this package builds on the unpublished notes *P
 
 [1] E. N. Belitser. *Posterior analysis for k-groups partitions*. Unpublished notes, Vrije Universiteit Amsterdam.
 
-References cited in the thesis:
-
 [2] F. Abramovich, Y. Benjamini, D. L. Donoho and I. M. Johnstone. Adapting to unknown sparsity by controlling the false discovery rate. *The Annals of Statistics*, 34(2):584–653, 2006.
 
 [3] D. L. Banks and S. E. Fienberg. Statistics, Multivariate. In R. A. Meyers (ed.), *Encyclopedia of Physical Science and Technology* (3rd ed.), pp. 851–889. Academic Press, 2003. [doi:10.1016/B0-12-227410-5/00731-6](https://doi.org/10.1016/B0-12-227410-5/00731-6)
@@ -211,15 +209,6 @@ References cited in the thesis:
 
 [15] KPMG. KPMG official page. 2025. https://kpmg.com/nl/nl/home/over-ons.html (visited 20 April 2025).
 
-BibTeX for [1]:
-
-```bibtex
-@unpublished{belitser_kgroups,
-  author = {Belitser, Eduard N.},
-  title  = {Posterior analysis for k-groups partitions},
-  note   = {Unpublished notes, Vrije Universiteit Amsterdam}
-}
-```
 
 ---
 
